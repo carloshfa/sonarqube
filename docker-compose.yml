@@ -1,0 +1,45 @@
+version: '3'
+services:
+  sonarqube:
+    build: ./sonarqube
+    ports:
+      - "9000:9000"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_temp:/opt/sonarqube/temp
+    deploy:
+      resources:
+        limits:
+          #cpus: '2'         # Set the maximum number of CPU cores
+          memory: 4G        # Set the maximum memory limit
+        reservations:
+          #cpus: '1'         # Set the initial number of CPU cores
+          memory: 2G        # Set the initial memory reservation  
+
+  postgres:
+    build: ./postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: s0n4r123
+      POSTGRES_DB: sonarqube
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          #cpus: '2'         # Set the maximum number of CPU cores
+          memory: 4G        # Set the maximum memory limit
+        reservations:
+          #cpus: '1'         # Set the initial number of CPU cores
+          memory: 2G        # Set the initial memory reservation  
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_temp:
+  postgres_data:
